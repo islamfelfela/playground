@@ -29,7 +29,11 @@ router.post('/', (req, res, next)=>{
         console.log(res);
         res.status(201).json({ // 201 => resource created successfully
             message: 'handeing POST REquest to /products',
-            product : result
+            product : result,
+            request:{
+                type: "GET",
+                url: "http://localhost:5000/products/"+ result._id
+            }
         });
     })
     .catch(err => {
@@ -44,10 +48,19 @@ router.get('/:id', (req, res, next)=>{
     const id = req.params.id;
     Product.findById(id)
     .exec()
-    .then(doc => {
-        console.log(doc);
-        if (doc) {
-            res.status(200).json(doc);    
+    .then(result => {
+        console.log(result);
+        if (result) {
+            res.status(200).json({
+                message: "product fetched",
+                product: result,
+                request: {
+                    type: "PATCH",
+                    url: "http://localhost:5000/products"+ result._id,
+                    body: {name: "String", price: "Number"},
+                    description: "You can update product "
+                }
+            });    
         }else{
             console.log("not found");
             res.status(404).json('resource not found for that id'); // wrong id
@@ -84,7 +97,15 @@ router.delete('/:id', (req, res, next)=>{
    .exec()
    .then(result => {
        console.log(result);
-       res.status(200).json(result);
+       res.status(200).json({
+           message: "product deleted",
+           request: {
+               description: "You can post new product ",
+               type: "Post",
+               url: "http://localhost:5000/products",
+               body: {name: "String", price: "Number"}
+           }
+       });
    })
    .catch(err => {
        console.log("error");
