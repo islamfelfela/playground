@@ -5,4 +5,7 @@ const port = 5000;
 
 const server = http.createServer(app);
 
-server.listen(port);
+server.listen(port, (err) => {
+    console.log("Server Up on Port 5000");
+    
+});
