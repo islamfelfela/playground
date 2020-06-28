@@ -6,6 +6,24 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
+router.get('/', (req, res, next) => {
+    User.find()
+    .exec()
+    .then(result => {
+        res.status(200).json({
+            count: result.length,
+            users: result
+        });
+    })
+    .catch(err => {
+        console.log(err);
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
+
 router.post('/signup', (req, res, next) => {
     User.find({ email: req.body.email })
         .exec()
